@@ -1,14 +1,15 @@
 import pygame
 import queue
-import numpy
 import sys
+import time
+import threading
 
 pygame.init()
 
 WHITE = (245, 245, 245)
 BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
-# GREY = 
+GREY = (220, 220, 220)
 
 
 window_width, window_heigh = 1024, 633
@@ -21,7 +22,7 @@ pygame.display.flip()
 img_bld = 'WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
 img1 = pygame.image.load(img_bld).convert()
 # screen.blit(img1,(20, 613))
-pygame.display.flip()
+# pygame.display.flip()
 
 img_elv = 'WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
 img2 = pygame.image.load(img_elv).convert()
@@ -30,7 +31,7 @@ img2 = pygame.image.load(img_elv).convert()
 img_screen = 'WhatsApp Image 2024-05-30 at 09.59.45.jpg'
 img3 = pygame.image.load(img_screen).convert()
 # screen.blit(img3,(200, 100))
-pygame.display.flip()
+# pygame.display.flip()
 
 
 clock = pygame.time.Clock()
@@ -47,8 +48,18 @@ class Elevator():
         self.__current_floor = building_floor
         self.__till_available = 0
         self.__queue = queue.Queue()
-        print(self.__queue.queue)
         self.__num = num
+
+    def update(self):
+        if self.__queue.qsize() > 0:
+            print(123)
+            next_floor  = self.__queue.queue[0]
+            y = building_floor - next_floor * floor_heit
+            if y != self.__current_floor:
+                diff = y - self.__current_floor 
+                direction  = diff / abs(diff)
+                self.__current_floor += direction * 5
+
 
     def get_current_floor(self):
         return self.__current_floor
@@ -62,17 +73,13 @@ class Elevator():
     def put_queue(self, item):
         self.__queue.put(item)
 
-    # def moving(self):
-    #     while self.__queue is not empty:
-    #         move_elv()
+   
        
 
     
 class Floor():
     def __init__(self, num):
         self.__floor_num = num
-        # pygame.mouse
-        # pygame.timer
 
         
 class Building:
@@ -88,6 +95,10 @@ class Building:
     
     def get_elevators(self):
         return self.__elevators
+    
+    def update_all_elevators(self):
+        for elevator in self.__elevators:
+            elevator.update()
 
     def constract_the_building(self):
         for i in range (len(self.__floors)):
@@ -115,33 +126,84 @@ class Building:
             if left_side < current_x < right_side and self.roof < current_y < zero_line and down < (zero_line - current_y) % floor_heit < up: 
                 num_floor = (zero_line - current_y) // floor_heit
                 green_button(num_floor)
-                nearestelevator = a1.get_neareste_elevator(num_floor)
-                self.move_elv(num_floor, nearestelevator)
+                nearestelevator, timer = a1.get_neareste_elevator(num_floor)
+                # my_threead1 = threading.Thread(target=self.move_elv, args=(num_floor, nearestelevator))
+                # my_threead2 = threading.Thread(target=self.show_timer, args)
+                # my_threead1.start()
+                # my_threead2.start()
+                # self.move_elv(num_floor, nearestelevator)
                 
-                # move_elv(num_floor)
-                
+                pygame.mixer.music.load("ding.mp3")
+                pygame.mixer.music.play()
+                self.show_timer(timer, current_y)
                 black_button(num_floor)
-                # moving()
-                # print(timer)
+                
 
+    def show_timer(self, timer, current_y):
+        my_floor = (zero_line - current_y) // floor_heit
+        num_floor = building_floor - my_floor * floor_heit + 20
+        timer += 0.5
+        while timer != 0:
+            timer -= 0.5
+            time.sleep(0.5)
+            pygame.draw.circle(screen, GREY, (350, num_floor + 7), 20)
+            pygame.display.flip()
+            font = pygame.font.Font (None, 25)
+            number = font.render(f"{timer}", True, (BLACK))
+            screen.blit(number, (340, num_floor))
+            pygame.display.flip()
+        if timer == 0:
+            pygame.draw.circle(screen, GREY, (350, num_floor + 7), 20)
+            pygame.display.flip()
+
+    
     def move_elv(self, num_floor, nearest_elevator):
-        # for i in range (len(self.__elevators)):
         elevator = a1.get_elevators()[nearest_elevator]
         x = 395 + nearest_elevator * 58
         y = elevator.get_current_floor()
         screen.blit(img2,(x, y))
         pygame.display.flip()
+        # a1.button()
         new_y = building_floor - (num_floor * floor_heit)
         while y != new_y:
             if new_y < y:
                 y -= 1
             else:
                 y += 1
-            # img2.fill(WHITE)
+            # a1.button()
             screen.blit(img2,(x, y))
             pygame.display.flip()
             clock.tick(REFRESH_RATE) 
             elevator.set_current_floor(y)
+
+
+      
+
+
+    # # def move_elv(self, num_floor, nearest_elevator):
+    #     for i in range (len(self.__elevators)):
+    #         elv = a1.get_elevators()[i]
+    #         y = elv.get_current_floor
+    #         new_y = building_floor - num_floor * floor_heit
+    #     while y != new_y:
+    #         # queue_elevator = [] * len(self.__elevators)
+    #         # for i in range (len(self.__elevators)):
+    #         #     elevator = a1.get_elevators()[i]
+    #         #     x = 395 + i * f_heit_line
+    #         #     y = elevator.get_current_floor()
+    #         # screen.blit(img2,(x, y))
+    #         # pygame.display.flip()
+    #         for i in range (len(elv)):
+    #             if i.queue:
+    #                 if new_y < y:
+    #                     y -= 1
+    #                 else:
+    #                     y += 1
+    #         # a1.button()
+    #                 screen.blit(img2,(x, y))
+    #                 pygame.display.flip()
+    #                 clock.tick(REFRESH_RATE) 
+    #             elevator.set_current_floor(y)
         
 
     def get_neareste_elevator(self, num_floor):
@@ -153,12 +215,13 @@ class Building:
             if elevator.get_till_available() != 0:
                 timer += 2
             data_elevator.append(timer)
+        elv = a1.get_elevators()[data_elevator.index(min(data_elevator))]
+        elv.put_queue(num_floor)
         nearest_elevator = data_elevator.index(min(data_elevator))
-        return nearest_elevator
-        # elevator = a1.get_elevators()[0]
-        elevator.put_queue(num_floor)
-        # print(elevator.__queue.queue)
-        # return(min(data_elevator))
+        timer = min(data_elevator)
+        return (nearest_elevator, timer)
+        
+     
     
 
 
@@ -169,7 +232,6 @@ def black_button(num_floor):
         y = building_floor - i * floor_heit
     font = pygame.font.Font (None, 25)
     number = font.render(f"{i}", True, (BLACK))
-    pygame.time.delay(3000)
     screen.blit(number, (300, y + 20))
    
     
@@ -190,7 +252,7 @@ def green_button(num_floor): #painting the button green
           
     
 
-a1 = Building(11, 3)            
+a1 = Building(11, 4)            
 a1.constract_the_building()                   
  
         
@@ -202,11 +264,35 @@ while not finish:
             finish = True
         else:
             a1.button()
-        # print(pygame.mouse.get_pos())   
+        # print(pygame.mouse.get_pos())
+            a1.update_all_elevators()
   
-    # pygame.display.update()
+
     pygame.display.flip()
     # clock.tick(REFRESH_RATE) 
+
+
+
+
+
+# def get_neareste_elevator(self, num_floor):
+#         data_elevator = [] * len(self.__elevators)
+#         for i in range (len(self.__elevators)):
+#             elevator = a1.get_elevators()[i]
+#             new_floor = (zero_line - elevator.get_current_floor()) // floor_heit
+#             timer = elevator.get_till_available() + ((abs(new_floor - num_floor)) * 0.5)
+#             if elevator.get_till_available() != 0:
+#                 timer += 2
+#             data_elevator.append(timer)
+#         nearest_elevator = data_elevator.index(min(data_elevator))
+#         timer = min(data_elevator)
+#         return (nearest_elevator, timer)
+        
+
+
+
+
+
 
 
     # def move_elv(num_floor):
