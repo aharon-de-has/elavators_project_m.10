@@ -112,27 +112,30 @@ class Elevator():
 class Floor():
     def __init__(self, num):
         self.__floor_num = num
-        self.__timer = 0
+    #     self.__timer = 0
+    #     self.__t_end = 0
 
-    def set_floor_num(self, num):
-        self.__floor_num = num
+    # def set_floor_num(self, num):
+    #     self.__floor_num = num
 
-    def set_timer(self, time):
-        self.__timer = time
+    # def set_timer(self, time):
+    #     self.__timer = time
 
     # def update(self):
-    #     print(self.__floor_num)
+    #     t_start = time.perf_counter()
     #     y = building_floor - self.__floor_num * floor_heit
     #     if self.__timer > 0:
-    #         self.__timer -= 0.01
-    #         pygame.draw.circle(screen, GREY, (350, y), 20)
-    #         pygame.display.flip()
-    #         font = pygame.font.Font (None, 25)
-    #         number = font.render(f"{self.__timer}", True, (BLACK))
-    #         screen.blit(number, (340, y))
-    #         pygame.display.flip()
+    #             pygame.draw.circle(screen, GREY, (350, y + 24), 20)
+    #             pygame.display.flip()
+    #             font = pygame.font.Font (None, 25)
+    #             number = font.render(f"{self.__timer}", True, (BLACK))
+    #             screen.blit(number, (340, y + 24))
+    #             pygame.display.flip()
+    #     if t_start - self.__t_end >= 0.5:
+    #         self.__timer -= 0.5
+    #         self.__t_end = time.perf_counter()
     #         if self.__timer == 0:
-    #             pygame.draw.circle(screen, GREY, (350, y), 20)
+    #             pygame.draw.circle(screen, GREY, (350, y + 24), 20)
     #             pygame.display.flip()
 
         
