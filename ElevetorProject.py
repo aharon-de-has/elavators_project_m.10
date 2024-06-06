@@ -60,7 +60,9 @@ class Elevator():
         screen.blit(number, (300, y))
 
 
-    def update(self):
+    def update(self, a1):
+        # print(self.__dst)
+        x = a1.__floors[self.__dst]
         t0 = time.perf_counter()
         if t0 - self.__t1 >= 2:
             if self.__queue.qsize() > 0:
@@ -78,6 +80,9 @@ class Elevator():
                     pygame.mixer.music.play()
                     black_button(next_floor)
                     self.__t1 = time.perf_counter()
+                    # x.elv_onway = True
+                    # a = a1.get_floor()[num_floor]
+                    # if a.get_elv_onway() != True:
            
 
 
@@ -112,8 +117,15 @@ class Elevator():
 class Floor():
     def __init__(self, num):
         self.__floor_num = num
+        self.elv_onway = False
     #     self.__timer = 0
     #     self.__t_end = 0
+
+    def set_elv_onway(self, item):
+        self.__elv_onway = item
+
+    def get_elv_onway(self):
+        return self.__elv_onway
 
     # def set_floor_num(self, num):
     #     self.__floor_num = num
@@ -154,12 +166,14 @@ class Building:
     def get_elevators(self):
         return self.__elevators
     
-    def get_floors(self):
+    def get_floor(self):
         return self.__floors
     
-    def update_all_elevators(self):
+  
+    
+    def update_all_elevators(self, a1):
         for elevator in self.__elevators:
-            elevator.update()
+            elevator.update(a1)
         # for floor in self.__floors:
         #     floor.update()
         pygame.display.flip()
@@ -193,10 +207,14 @@ class Building:
             current_x, current_y = pygame.mouse.get_pos()
             if left_side < current_x < right_side and self.roof < current_y < zero_line and down < (zero_line - current_y) % floor_heit < up: 
                 num_floor = (zero_line - current_y) // floor_heit
-                green_button(num_floor)
-                nearest_elevator, timer = a1.get_neareste_elevator(num_floor)
-                my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
-                my_threead1.start()
+                # a = a1.get_floor()[num_floor]
+                x = self.__floors[num_floor]
+                if x.elv_onway != True:
+                    green_button(num_floor)
+                    x.elv_onway = True
+                    nearest_elevator, timer = a1.get_neareste_elevator(num_floor)
+                    my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
+                    my_threead1.start()
 
                 # self.move_elv(num_floor, nearest_elevator)
                 # pygame.mixer.music.load("ding.mp3")
@@ -290,7 +308,7 @@ def green_button(num_floor): #painting the button green
           
     
 
-a1 = Building(10, 1)            
+a1 = Building(10, 2)            
 a1.constract_the_building()                   
  
         
@@ -305,7 +323,7 @@ while not finish:
             # print(pygame.mouse.get_pos())
             pygame.display.flip()
             # clock.tick(REFRESH_RATE) 
-    a1.update_all_elevators()
+    a1.update_all_elevators(a1)
             
 
 

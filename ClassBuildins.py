@@ -45,6 +45,8 @@ f_heit_line = 57
 
 
 
+
+
 class Building:
     def __init__(self, floors: int, elevators: int):
         self.__floors = []
@@ -58,8 +60,6 @@ class Building:
     def get_elevators(self):
         return self.__elevators
     
-    # def get_floors(self):
-    #     return self.__floors
     
     def update_all_elevators(self):
         for elevator in self.__elevators:
@@ -90,7 +90,6 @@ class Building:
     
         """looks for the evelevator that will come in the shortest time, 
         and puts the requested floor in the queue of one of the elevator and returns how long it will come"""
-    
     def get_neareste_elevator(self, num_floor): 
         data_elevator = [] * len(self.__elevators)
         for i in range (len(self.__elevators)):
@@ -145,7 +144,7 @@ class Building:
             screen.blit(img2, (x, building_floor))
     
  
-a1 = Building(10, 5)            
+a1 = Building(10, 3)            
 a1.constract_the_building()     
     
 finish = False
