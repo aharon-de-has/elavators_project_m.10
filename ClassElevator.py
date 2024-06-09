@@ -1,23 +1,7 @@
 import pygame
 import queue
 import time
-
-BLACK = (0, 0, 0)
-
-window_width, window_heigh = 1024, 633
-size = (window_width, window_heigh)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("elevator")
-
-building_floor = 570
-floor_heit = 51
-f_heit_line = 57
-button_pos = 300
-show_circle_pos = 350
-location_first_elevator = 395
-
-img_elv = 'WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
-img2 = pygame.image.load(img_elv).convert()
+from Settings import *
 
 class Elevator():
     def __init__(self, num):
@@ -49,7 +33,7 @@ class Elevator():
                     diff = dst - self.__current_y 
                     direction  = diff / abs(diff)
                     self.__current_y += direction * 1
-                    x = location_first_elevator + self.__num * f_heit_line
+                    x = location_left_elevator + self.__num * f_heit_line
                     screen.blit(img2,(x, self.__current_y))
                 if dst == self.__current_y:
                     self.__queue.get() #Remove from the queue at the end of the action

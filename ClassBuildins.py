@@ -3,62 +3,7 @@ import threading
 import time
 from ClassFloor import Floor
 from ClassElevator import Elevator
-
-
-pygame.init()
-
-WHITE = (245, 245, 245)
-BLACK = (0, 0, 0)
-GREEN = (0, 255, 0)
-GREY = (220, 220, 220)
-
-
-window_width, window_heigh = 1024, 633
-size = (window_width, window_heigh)
-screen = pygame.display.set_mode(size)
-pygame.display.set_caption("elevator")
-screen.fill(WHITE)
-pygame.display.flip()
-
-img_bld = 'WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
-img1 = pygame.image.load(img_bld).convert()
-# screen.blit(img1,(20, 613))
-# pygame.display.flip()
-
-img_elv = 'WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
-img2 = pygame.image.load(img_elv).convert()
-
-
-img_screen = 'WhatsApp Image 2024-05-30 at 09.59.45.jpg'
-img3 = pygame.image.load(img_screen).convert()
-# screen.blit(img3,(200, 100))
-# pygame.display.flip()
-
-
-clock = pygame.time.Clock()
-REFRESH_RATE = 97
-
-zero_line = 620
-building_floor = 570
-Building_floor_screen = 590
-floor_heit = 51
-f_heit_line = 57
-button_pos = 300
-show_timer_pos = 340
-show_circle_pos = 350
-left_building = 20
-right_building = 280
-location_left_elevator = 395
-right_position_black_line = 386
-
-LEFT = 1
-left_side = 290
-right_side = 320
-down = 10
-up = 31
-
-
-
+from Settings import *
 
 
 class Building:
@@ -98,6 +43,7 @@ class Building:
     def show_timer(self, timer, current_y, nearest_elevator): 
         my_floor = (zero_line - current_y) // floor_heit #Ordered floor number
         num_floor = Building_floor_screen - my_floor * floor_heit  #y values of the floor
+        timer += 0.5
         while timer != 0:
             timer -= 0.5
             pygame.draw.circle(screen, GREY, (show_circle_pos, num_floor + 7), 22)
@@ -138,6 +84,7 @@ class Building:
         timer = min(data_elevator)
         return (nearest_elevator, timer)
     
+    
     def green_button(self, num_floor): #painting the button green
         for i in range (num_floor + 1) :
             y = building_floor - i * floor_heit + 20
@@ -145,7 +92,6 @@ class Building:
         number = font.render(f"{i}", True, (GREEN))
         screen.blit(number, (button_pos, y))
         pygame.display.flip()
-
 
     
     def button_management(self): #identifies the booked floor
@@ -164,6 +110,7 @@ class Building:
                     my_threead2 = threading.Thread(target=self.alloow_floor, args=(num_floor, timer))
                     my_threead2.start() #Allows ordering an elevator to a floor, after the elevator has already arrived
 
+    
     def constract_the_building(self): #draws the building
         for i in range (len(self.__floors)): 
             y = building_floor - i * floor_heit
