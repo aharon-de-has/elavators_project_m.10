@@ -36,12 +36,26 @@ img3 = pygame.image.load(img_screen).convert()
 
 
 clock = pygame.time.Clock()
-REFRESH_RATE = 96
+REFRESH_RATE = 97
 
 zero_line = 620
 building_floor = 570
+Building_floor_screen = 590
 floor_heit = 51
 f_heit_line = 57
+button_pos = 300
+show_timer_pos = 340
+show_circle_pos = 350
+left_building = 20
+right_building = 280
+location_left_elevator = 395
+right_position_black_line = 386
+
+LEFT = 1
+left_side = 290
+right_side = 320
+down = 10
+up = 31
 
 
 
@@ -60,91 +74,112 @@ class Building:
     def get_elevators(self):
         return self.__elevators
     
+    def get_floors(self):
+        return self.__floors
     
+    """The function constantly updates all elevators"""
     def update_all_elevators(self):
         for elevator in self.__elevators:
             elevator.update()
         pygame.display.flip()
         clock.tick(REFRESH_RATE)
 
+    def alloow_floor(self, num_floor, timer): #Allows ordering an elevator to the floor
+        floor = a1.get_floors()[num_floor]
+        time.sleep(timer)
+        floor.set_elv_onway(False)
+
     
-        """displays the number of second left until the elevator arrives"""
+        """Displays the number of second until the elevator arrives
+        args:
+        1. timer: the second remaining for the elevator to arrive
+        2. current y: convert y values to floor number
+        3. nearest elevator: defines the end time of the elevator movement"""
     def show_timer(self, timer, current_y, nearest_elevator): 
-        my_floor = (zero_line - current_y) // floor_heit
-        num_floor = building_floor - my_floor * floor_heit + 20
-        timer += 0.5
+        my_floor = (zero_line - current_y) // floor_heit #Ordered floor number
+        num_floor = Building_floor_screen - my_floor * floor_heit  #y values of the floor
         while timer != 0:
             timer -= 0.5
-            elevator = a1.get_elevators()[nearest_elevator]
-            elevator.set_till_available(timer)
-            pygame.draw.circle(screen, GREY, (350, num_floor + 7), 22)
-            pygame.display.flip()
+            pygame.draw.circle(screen, GREY, (show_circle_pos, num_floor + 7), 22)
             font = pygame.font.Font (None, 25)
             number = font.render(f"{timer}", True, (BLACK))
-            screen.blit(number, (340, num_floor))
-            pygame.display.flip()
+            screen.blit(number, (show_timer_pos, num_floor))
             time.sleep(0.5)
+            elevator = a1.get_elevators()[nearest_elevator]
+            if my_floor == elevator.get_last_order():
+                elevator.set_till_available(timer) #Updates the ramaining time according to the last order
         if timer == 0:
-            pygame.draw.circle(screen, GREY, (350, num_floor + 7), 20)
-            pygame.display.flip()
+            pygame.draw.circle(screen, GREY, (show_circle_pos, num_floor + 7), 20) #clears the screen if time resets
+            
     
-        """looks for the evelevator that will come in the shortest time, 
-        and puts the requested floor in the queue of one of the elevator and returns how long it will come"""
+        """Looks for the evelevator that will come in the shortest time, 
+        and puts the requested floor in the queue of one of the elevator and returns how long it will come
+        args:
+        int: The number of the floor ordered
+        returns:
+        1. Enters the floor number into the most available elevator queue
+        2. Returns the time remaining for the elevator to arrive
+        """
     def get_neareste_elevator(self, num_floor): 
         data_elevator = [] * len(self.__elevators)
         for i in range (len(self.__elevators)):
             elevator = a1.get_elevators()[i]
+            #Calcuates the time  remaining until the elevator is free + the different from the ending floor to the ordred floor
             old_floor = (zero_line - elevator.get_dst()) // floor_heit
             timer = elevator.get_till_available() + ((abs(old_floor - num_floor)) * 0.5)
             if elevator.get_till_available() != 0:
                 timer += 2
-            data_elevator.append(timer)
+            data_elevator.append(timer) #An array of times for each elevator
         elv = a1.get_elevators()[data_elevator.index(min(data_elevator))]
         elv.put_queue(num_floor)
-        elv.set_dst(building_floor - num_floor * floor_heit)
-        nearest_elevator = data_elevator.index(min(data_elevator))
+        elv.set_last_order(num_floor) #The timer is counted according to the last order
+        elv.set_dst(building_floor - num_floor * floor_heit) #The final location of the elevator
+        nearest_elevator = data_elevator.index(min(data_elevator)) #We will identipy the elevator by its index
         timer = min(data_elevator)
         return (nearest_elevator, timer)
     
     def green_button(self, num_floor): #painting the button green
         for i in range (num_floor + 1) :
-            y = building_floor - i * floor_heit
+            y = building_floor - i * floor_heit + 20
         font = pygame.font.Font (None, 25)
         number = font.render(f"{i}", True, (GREEN))
-        screen.blit(number, (300, y + 20))
+        screen.blit(number, (button_pos, y))
         pygame.display.flip()
+
+
     
     def button_management(self): #identifies the booked floor
-        LEFT = 1
-        left_side = 290
-        right_side = 320
-        down = 10
-        up = 31
-        if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.button == LEFT: #There is a lept mouse click
             current_x, current_y = pygame.mouse.get_pos()
+            #Marks the exact position of the button
             if left_side < current_x < right_side and self.roof < current_y < zero_line and down < (zero_line - current_y) % floor_heit < up: 
                 num_floor = (zero_line - current_y) // floor_heit
-                self.green_button(num_floor)
-                nearest_elevator, timer = a1.get_neareste_elevator(num_floor)
-                my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
-                my_threead1.start()
+                floor = a1.get_floors()[num_floor]
+                if floor.get_elv_onway() != True: #There is no elevator on the way to the floor, preventing the arrival of 2 elevators at the same time.
+                    floor.set_elv_onway(True)
+                    self.green_button(num_floor) #Colors the button green
+                    nearest_elevator, timer = a1.get_neareste_elevator(num_floor)
+                    my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
+                    my_threead1.start() #Displays the remaining time until the elevator arrives
+                    my_threead2 = threading.Thread(target=self.alloow_floor, args=(num_floor, timer))
+                    my_threead2.start() #Allows ordering an elevator to a floor, after the elevator has already arrived
 
     def constract_the_building(self): #draws the building
-        for i in range (len(self.__floors)):
+        for i in range (len(self.__floors)): 
             y = building_floor - i * floor_heit
-            screen.blit(img1, (20, y))
-            screen.blit(img3,(280, y))
-            pygame.draw.line(screen, (BLACK), [20, y], [386, y], 7)
+            screen.blit(img1, (left_building, y)) #draws the building 
+            screen.blit(img3,(right_building, y)) #draw the screen
+            pygame.draw.line(screen, (BLACK), [left_building, y], [right_position_black_line, y], 7) #draw the blacg line
             font = pygame.font.Font (None, 25)
             number = font.render(f"{i}", True, (BLACK))
-            screen.blit(number, (300, y + 20))
-        self.roof = y #the roof of the building
+            screen.blit(number, (button_pos, y + 20)) #draw the floor numbers
+        self.roof = y #the roof of the building, used the mark place of the button
         for i in range (len(self.__elevators)):
-            x = 395 + i * f_heit_line
-            screen.blit(img2, (x, building_floor))
+            x = location_left_elevator + i * f_heit_line
+            screen.blit(img2, (x, building_floor)) #draw the elevators
     
  
-a1 = Building(10, 3)            
+a1 = Building(12, 1)            
 a1.constract_the_building()     
     
 finish = False
