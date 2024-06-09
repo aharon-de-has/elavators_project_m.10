@@ -64,8 +64,7 @@ class Building:
         int: The number of the floor ordered
         returns:
         1. Enters the floor number into the most available elevator queue
-        2. Returns the time remaining for the elevator to arrive
-        """
+        2. Returns the time remaining for the elevator to arrive"""
     def get_neareste_elevator(self, num_floor): 
         data_elevator = [] * len(self.__elevators)
         for i in range (len(self.__elevators)):
@@ -87,7 +86,7 @@ class Building:
     
     def green_button(self, num_floor): #painting the button green
         for i in range (num_floor + 1) :
-            y = building_floor - i * floor_heit + 20
+            y = Building_floor_screen - i * floor_heit
         font = pygame.font.Font (None, 25)
         number = font.render(f"{i}", True, (GREEN))
         screen.blit(number, (button_pos, y))
@@ -111,22 +110,22 @@ class Building:
                     my_threead2.start() #Allows ordering an elevator to a floor, after the elevator has already arrived
 
     
-    def constract_the_building(self): #draws the building
+    def constract_the_building(self): #Draws the building
         for i in range (len(self.__floors)): 
             y = building_floor - i * floor_heit
-            screen.blit(img1, (left_building, y)) #draws the building 
-            screen.blit(img3,(right_building, y)) #draw the screen
+            screen.blit(img1, (left_building, y)) #Draws the building 
+            screen.blit(img3,(right_building, y)) #Draw the screen
             pygame.draw.line(screen, (BLACK), [left_building, y], [right_position_black_line, y], 7) #draw the blacg line
             font = pygame.font.Font (None, 25)
-            number = font.render(f"{i}", True, (BLACK))
-            screen.blit(number, (button_pos, y + 20)) #draw the floor numbers
-        self.roof = y #the roof of the building, used the mark place of the button
+            number = font.render(f"{i}", True, (BLACK)) #Add a number to the floor
+            screen.blit(number, (button_pos, y + 20)) #Draw the floor numbers
+        self.roof = y #The roof of the building, used the mark place of the button
         for i in range (len(self.__elevators)):
             x = location_left_elevator + i * f_heit_line
-            screen.blit(img2, (x, building_floor)) #draw the elevators
+            screen.blit(img2, (x, building_floor)) #Draw the elevators
     
  
-a1 = Building(12, 1)            
+a1 = Building(12, 4)            
 a1.constract_the_building()     
     
 finish = False
