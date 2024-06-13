@@ -1,4 +1,14 @@
 # elavators_project_m.10
+
+The assignment is to design and build an efficient elevator system using the python language.
+After running the code, the user will see the building that will include the floors, elevators and elevator controls.
+An elevator call control will be displayed on each floor with the floor number written on it. Pressing the button will order an elevator to the floor (even if there is no elevator available at the moment).
+When ordering an elevator to a floor, a decreasing number will be displayed next to the elevator button representing the number of seconds remaining until the elevator arrives.
+The elevator algorithm must bring to the minimum possible waiting time for the elevator without extending the waiting times of those who have already ordered an elevator.
+Setting/changing the number of floors and the number of elevators in the building must be allowed in a simple way (by changing settings in the code or a settings file).
+The elevators will move at a speed of half a second per floor (the movement must be presented in a smooth animation - and not, for example, jumping between floors), and when they reach the destination floor (to which the elevator was ordered), they will be delayed for two seconds.
+
+
 For the purpose of the project we used 3 classes.  
 class Floor, whose data members is the number of the floor.  
 1. floor number
