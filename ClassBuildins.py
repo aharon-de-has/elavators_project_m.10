@@ -71,10 +71,11 @@ class Building:
             elevator = a1.get_elevators()[i]
             #Calcuates the time  remaining until the elevator is free + the different from the ending floor to the ordred floor
             old_floor = (zero_line - elevator.get_dst()) // floor_heit
-            timer = elevator.get_till_available() + ((abs(old_floor - num_floor)) * 0.5)
+            timer = elevator.get_till_available() + ((abs(old_floor - num_floor)) * time_for_one_floor)
             if elevator.get_till_available() != 0:
-                timer += 2
+                timer += delay_time
             data_elevator.append(timer) #An array of times for each elevator
+
         elv = a1.get_elevators()[data_elevator.index(min(data_elevator))]
         elv.put_queue(num_floor)
         elv.set_last_order(num_floor) #The timer is counted according to the last order
@@ -110,7 +111,7 @@ class Building:
                     my_threead2.start() #Allows ordering an elevator to a floor, after the elevator has already arrived
 
     
-    def constract_the_building(self): #Draws the building
+    def construct_the_building(self): #Draws the building
         for i in range (len(self.__floors)): 
             y = building_floor - i * floor_heit
             screen.blit(img1, (left_building, y)) #Draws the building 
@@ -126,7 +127,7 @@ class Building:
     
  
 a1 = Building(12, 4)            
-a1.constract_the_building()     
+a1.construct_the_building()     
     
 finish = False
 while not finish:
@@ -135,6 +136,6 @@ while not finish:
             finish = True
         else:
             a1.button_management()
-            pygame.display.flip()
     a1.update_all_elevators()
+
             

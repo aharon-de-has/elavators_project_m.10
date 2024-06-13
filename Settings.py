@@ -45,3 +45,5 @@ left_side = 290
 right_side = 320
 down = 10
 up = 31
+time_for_one_floor = 0.5
+delay_time = 2

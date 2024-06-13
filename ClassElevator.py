@@ -22,10 +22,18 @@ class Elevator():
         screen.blit(number, (button_pos, y))
 
 
+    def elevator_arrived(self, next_floor):
+        self.__queue.get() #Remove from the queue at the end of the action
+        pygame.mixer.music.load("ding.mp3") #Play the sound
+        pygame.mixer.music.play()
+        self.black_button(next_floor)
+        self.__t_end = time.perf_counter()
+
+
     """As long as there are orders in the queue, move the elevator by one pixel each iteration"""
     def update(self):
         t_start = time.perf_counter()
-        if t_start - self.__t_end >= 2: #Checks that 2 second have passed since the end of the last operations
+        if t_start - self.__t_end >= delay_time: #Checks that 2 second have passed since the end of the last operations
             if self.__queue.qsize() > 0:
                 next_floor  = self.__queue.queue[0]
                 dst = building_floor - next_floor * floor_heit 
@@ -35,12 +43,9 @@ class Elevator():
                     self.__current_y += direction * 1
                     x = location_left_elevator + self.__num * f_heit_line
                     screen.blit(img2,(x, self.__current_y))
-                if dst == self.__current_y:
-                    self.__queue.get() #Remove from the queue at the end of the action
-                    pygame.mixer.music.load("ding.mp3") #Play the sound
-                    pygame.mixer.music.play()
-                    self.black_button(next_floor)
-                    self.__t_end = time.perf_counter()
+                else:
+                    self.elevator_arrived(next_floor)
+                    
                     
                 
            
