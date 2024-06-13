@@ -19,16 +19,16 @@ pygame.display.set_caption("elevator")
 screen.fill(WHITE)
 pygame.display.flip()
 
-img_bld = 'WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
+img_bld = 'various/WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
 img1 = pygame.image.load(img_bld).convert()
 # screen.blit(img1,(20, 613))
 # pygame.display.flip()
 
-img_elv = 'WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
+img_elv = 'various/WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
 img2 = pygame.image.load(img_elv).convert()
 
 
-img_screen = 'WhatsApp Image 2024-05-30 at 09.59.45.jpg'
+img_screen = 'various/WhatsApp Image 2024-05-30 at 09.59.45.jpg'
 img3 = pygame.image.load(img_screen).convert()
 # screen.blit(img3,(200, 100))
 # pygame.display.flip()
@@ -74,7 +74,7 @@ class Elevator():
                     screen.blit(img2,(x, self.__current_floor))
                 if dst == self.__current_floor:
                     self.__queue.get()
-                    pygame.mixer.music.load("ding.mp3")
+                    pygame.mixer.music.load("various/ding.mp3")
                     pygame.mixer.music.play()
                     black_button(next_floor)
                     self.__t1 = time.perf_counter()
