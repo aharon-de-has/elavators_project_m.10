@@ -126,7 +126,7 @@ class Building:
             screen.blit(img2, (x, building_floor)) #Draw the elevators
     
  
-a1 = Building(12, 4)            
+a1 = Building(11, 1)            
 a1.construct_the_building()     
     
 finish = False

@@ -15,13 +15,13 @@ pygame.display.set_caption("elevator")
 screen.fill(WHITE)
 pygame.display.flip()
 
-img_bld = 'WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
+img_bld = 'various/WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
 img1 = pygame.image.load(img_bld).convert()
 
-img_elv = 'WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
+img_elv = 'various/WhatsApp Image 2024-05-29 at 18.33.11.jpeg'
 img2 = pygame.image.load(img_elv).convert()
 
-img_screen = 'WhatsApp Image 2024-05-30 at 09.59.45.jpg'
+img_screen = 'various/WhatsApp Image 2024-05-30 at 09.59.45.jpg'
 img3 = pygame.image.load(img_screen).convert()
 
 

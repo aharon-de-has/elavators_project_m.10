@@ -24,7 +24,7 @@ class Elevator():
 
     def elevator_arrived(self, next_floor):
         self.__queue.get() #Remove from the queue at the end of the action
-        pygame.mixer.music.load("ding.mp3") #Play the sound
+        pygame.mixer.music.load("various/ding.mp3") #Play the sound
         pygame.mixer.music.play()
         self.black_button(next_floor)
         self.__t_end = time.perf_counter()
