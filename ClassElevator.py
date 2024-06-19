@@ -30,8 +30,9 @@ class Elevator():
         self.__t_end = time.perf_counter()
 
 
-    """As long as there are orders in the queue, move the elevator by one pixel each iteration"""
+    
     def update(self):
+        """As long as there are orders in the queue, move the elevator by one pixel each iteration"""
         t_start = time.perf_counter()
         if t_start - self.__t_end >= delay_time: #Checks that 2 second have passed since the end of the last operations
             if self.__queue.qsize() > 0:
@@ -83,6 +84,9 @@ class Elevator():
 
     def get_last_order(self):
         return self.__last_order
+    
+    def get_t_end(self):
+        return self.__t_end
    
     
 

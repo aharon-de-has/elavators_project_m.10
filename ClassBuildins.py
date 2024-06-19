@@ -1,5 +1,4 @@
-import pygame
-import threading
+import pygame, threading
 import time
 from ClassFloor import Floor
 from ClassElevator import Elevator
@@ -22,8 +21,9 @@ class Building:
     def get_floors(self):
         return self.__floors
     
-    """The function constantly updates all elevators"""
+
     def update_all_elevators(self):
+        """The function constantly updates all elevators"""
         for elevator in self.__elevators:
             elevator.update()
         pygame.display.flip()
@@ -35,12 +35,14 @@ class Building:
         floor.set_elv_onway(False)
 
     
+   
+    def show_timer(self, timer, current_y, nearest_elevator): 
         """Displays the number of second until the elevator arrives
         args:
         1. timer: the second remaining for the elevator to arrive
         2. current y: convert y values to floor number
         3. nearest elevator: defines the end time of the elevator movement"""
-    def show_timer(self, timer, current_y, nearest_elevator): 
+        elevator = a1.get_elevators()[nearest_elevator]
         my_floor = (zero_line - current_y) // floor_heit #Ordered floor number
         num_floor = Building_floor_screen - my_floor * floor_heit  #y values of the floor
         timer += 0.5
@@ -48,16 +50,17 @@ class Building:
             timer -= 0.5
             pygame.draw.circle(screen, GREY, (show_circle_pos, num_floor + 7), 22)
             font = pygame.font.Font (None, 25)
-            number = font.render(f"{timer}", True, (BLACK))
+            number = font.render(f"{timer:.1f}", True, (BLACK))
             screen.blit(number, (show_timer_pos, num_floor))
             time.sleep(0.5)
-            elevator = a1.get_elevators()[nearest_elevator]
             if my_floor == elevator.get_last_order():
                 elevator.set_till_available(timer) #Updates the ramaining time according to the last order
         if timer == 0:
             pygame.draw.circle(screen, GREY, (show_circle_pos, num_floor + 7), 20) #clears the screen if time resets
             
     
+        
+    def get_neareste_elevator(self, num_floor): 
         """Looks for the evelevator that will come in the shortest time, 
         and puts the requested floor in the queue of one of the elevator and returns how long it will come
         args:
@@ -65,7 +68,6 @@ class Building:
         returns:
         1. Enters the floor number into the most available elevator queue
         2. Returns the time remaining for the elevator to arrive"""
-    def get_neareste_elevator(self, num_floor): 
         data_elevator = [] * len(self.__elevators)
         for i in range (len(self.__elevators)):
             elevator = a1.get_elevators()[i]
@@ -126,7 +128,7 @@ class Building:
             screen.blit(img2, (x, building_floor)) #Draw the elevators
     
  
-a1 = Building(11, 1)            
+a1 = Building(12, 1)            
 a1.construct_the_building()     
     
 finish = False

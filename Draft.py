@@ -131,22 +131,20 @@ class Floor():
         self.__timer = time
 
     def update(self):
-        # print(123, self.__timer)
         t_start = time.perf_counter()
         y = building_floor - self.__floor_num * floor_heit
         if self.__timer > 0:
                 pygame.draw.circle(screen, GREY, (350, y + 24), 20)
-                pygame.display.flip()
                 font = pygame.font.Font (None, 25)
                 number = font.render(f"{self.__timer}", True, (BLACK))
                 screen.blit(number, (340, y + 24))
-                pygame.display.flip()
+        # self.__timer += 0.5
         if t_start - self.__t_end >= 0.5:
             self.__timer -= 0.5
             self.__t_end = time.perf_counter()
             if self.__timer == 0:
                 pygame.draw.circle(screen, GREY, (350, y + 24), 20)
-                pygame.display.flip()
+            
 
         
 class Building:
@@ -211,7 +209,7 @@ class Building:
                     # a.set_elv_onway(True)
                 nearest_elevator, timer = a1.get_neareste_elevator(num_floor)
                 a.set_timer(timer)
-                my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
+                # my_threead1 = threading.Thread(target=self.show_timer, args=(timer, current_y, nearest_elevator))
                 # my_threead1.start()
 
                 # self.move_elv(num_floor, nearest_elevator)

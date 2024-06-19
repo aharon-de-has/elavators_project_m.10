@@ -7,13 +7,15 @@ BLACK = (0, 0, 0)
 GREEN = (0, 255, 0)
 GREY = (220, 220, 220)
 
-
-window_width, window_heigh = 1024, 633
+window_width = 1024
+window_heigh =  633
 size = (window_width, window_heigh)
 screen = pygame.display.set_mode(size)
 pygame.display.set_caption("elevator")
 screen.fill(WHITE)
 pygame.display.flip()
+
+
 
 img_bld = 'various/WhatsApp Image 2024-05-30 at 09.15.01.jpeg'
 img1 = pygame.image.load(img_bld).convert()
@@ -47,3 +49,4 @@ down = 10
 up = 31
 time_for_one_floor = 0.5
 delay_time = 2
+
